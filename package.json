@@ -1,0 +1,49 @@
+{
+  "name": "simple-file-creator",
+  "version": "1.2.0",
+  "description": "A library for creating file structures through simple node operations.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx unbuild",
+    "lint": "eslint src test --fix",
+    "test": "vitest",
+    "prepare": "simple-git-hooks"
+  },
+  "keywords": [
+    "file"
+  ],
+  "author": "muamuamu",
+  "license": "MIT",
+  "devDependencies": {
+    "@stylistic/eslint-plugin": "^1.7.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.12.7",
+    "@typescript-eslint/parser": "^7.7.0",
+    "lint-staged": "^15.2.2",
+    "simple-git-hooks": "^2.11.1",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0",
+    "vitest": "^1.5.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  },
+  "dependencies": {
+    "deepcopy": "^2.1.0",
+    "jsondiffpatch": "^0.6.0"
+  }
+}
