@@ -9,8 +9,6 @@ export default [
   }),
   {
     languageOptions: { parser: parserTs },
-  },
-  {
-    files: ['src/**/*.ts', 'test/**/*.test.ts'],
+    files: ['src/**/*.ts', 'test/**/*.test.ts', 'examples/**/*.test.ts'],
   },
 ]

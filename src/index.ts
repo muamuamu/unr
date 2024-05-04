@@ -1,16 +1,17 @@
 import deepcopy from 'deepcopy'
-import jsondiffpatch, { diff, create, type ObjectDelta } from 'jsondiffpatch'
-import { restore, type Delta } from './utils'
+import { create, type ObjectDelta } from 'jsondiffpatch'
+import { restore } from './utils'
 
-export type DataProps = Record<string, any>
+type DataProps = Record<string, any>
 
 const jsondiffpatchInstance = create({ arrays: { detectMove: false } })
 
 class Und {
   #cacheData = {} as DataProps
   #current = {} as DataProps
-  stack = [] as Array<ObjectDelta>
+  #stack = [] as Array<ObjectDelta>
   pointIndex = 0
+  stackLength = 0
 
   constructor(data: DataProps, options = {}) {
     try {
@@ -24,11 +25,11 @@ class Und {
   }
 
   save() {
-    const delta = this.diff() as ObjectDelta
-    if (!delta && this.stack.length > 0) {
+    const delta = this.diff()
+    if (!delta && this.#stack.length > 0) {
       return
     }
-    this.stack = [...this.stack.slice(0, this.pointIndex + 1), delta]
+    this.#stack = [...this.#stack.slice(0, this.pointIndex + 1), delta]
     this.setCache()
     this.setPointIndex()
   }
@@ -38,29 +39,44 @@ class Und {
       return
     }
     this.reset()
-    restore(this.#current, this.stack[this.pointIndex--], true)
+    restore(this.#current, this.#stack[this.pointIndex--], true)
     this.setCache()
   }
 
   redo() {
-    if (this.pointIndex === this.stack.length - 1) {
+    if (this.pointIndex === this.#stack.length - 1) {
       return
     }
     this.reset()
-    restore(this.#current, this.stack[++this.pointIndex], false)
+    restore(this.#current, this.#stack[++this.pointIndex], false)
     this.setCache()
   }
 
   reset() {
-    const delta = this.diff() as ObjectDelta
+    const delta = this.diff()
     if (!delta) {
       return
     }
     restore(this.#current, delta, true)
   }
 
-  private diff() {
-    return jsondiffpatchInstance.diff(this.#cacheData, this.#current)
+  patch(source: DataProps) {
+    if (!source) {
+      return
+    }
+    const delta = this.diff(this.#current, source)
+    if (!delta) {
+      return
+    }
+    restore(this.#current, delta, false)
+  }
+
+  hasChange() {
+    return !!this.diff()
+  }
+
+  private diff(left = this.#cacheData, right = this.#current) {
+    return jsondiffpatchInstance.diff(left, right) as ObjectDelta
   }
 
   private setCache() {
@@ -68,7 +84,8 @@ class Und {
   }
 
   private setPointIndex(index?: number) {
-    this.pointIndex = index ?? this.stack.length - 1
+    this.stackLength = this.#stack.length - 1
+    this.pointIndex = index ?? this.stackLength
   }
 }
 

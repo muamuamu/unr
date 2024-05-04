@@ -1,7 +1,6 @@
 import { expect, it } from 'vitest'
-import Und, { DataProps } from '../src'
+import Und from '../src'
 import { describe } from 'node:test'
-import { type Delta } from '../src/utils'
 import deepcopy from 'deepcopy'
 
 describe('show data', function () {
@@ -18,27 +17,7 @@ describe('show data', function () {
     expect(handler).toMatchInlineSnapshot(`
       Und {
         "pointIndex": 3,
-        "stack": [
-          undefined,
-          {
-            "a": [
-              1,
-              2,
-            ],
-          },
-          {
-            "a": [
-              2,
-              3,
-            ],
-          },
-          {
-            "a": [
-              3,
-              4,
-            ],
-          },
-        ],
+        "stackLength": 0,
       }
     `)
     handler.pointIndex = 2
@@ -47,27 +26,7 @@ describe('show data', function () {
     expect(handler).toMatchInlineSnapshot(`
       Und {
         "pointIndex": 3,
-        "stack": [
-          undefined,
-          {
-            "a": [
-              1,
-              2,
-            ],
-          },
-          {
-            "a": [
-              2,
-              3,
-            ],
-          },
-          {
-            "a": [
-              4,
-              5,
-            ],
-          },
-        ],
+        "stackLength": 0,
       }
     `)
   })
