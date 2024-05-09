@@ -2,7 +2,7 @@ import deepcopy from 'deepcopy'
 import { type ObjectDelta } from 'jsondiffpatch'
 import { restore, diff, type TargetObj } from './lib'
 
-class Und {
+class Unrs {
   #cacheData = {} as TargetObj
   #current = {} as TargetObj
   #stack = [] as Array<ObjectDelta>
@@ -101,4 +101,4 @@ class Und {
   }
 }
 
-export default Und
+export default Unrs

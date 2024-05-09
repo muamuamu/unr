@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import Und from '../src'
+import Unrs from '../src'
 import deepcopy from 'deepcopy'
 
 describe('show data', function () {
   const data = { a: 1 } as any
-  const handler = new Und(data)
+  const handler = new Unrs(data)
 
   it('add stack', function () {
     data.a = 2
@@ -14,7 +14,7 @@ describe('show data', function () {
     data.a = 4
     handler.save()
     expect(handler).toMatchInlineSnapshot(`
-      Und {
+      Unrs {
         "stack": [
           undefined,
           {
@@ -42,7 +42,7 @@ describe('show data', function () {
     data.a = 5
     handler.save()
     expect(handler).toMatchInlineSnapshot(`
-      Und {
+      Unrs {
         "stack": [
           undefined,
           {
@@ -79,7 +79,7 @@ describe('test object attribute', function () {
   const data = {
     a: 1,
   } as any
-  const handler = new Und(data)
+  const handler = new Unrs(data)
   it('test undo redo', function () {
     data.a = 2
     handler.save()
@@ -172,7 +172,7 @@ describe('test array', function () {
     const o1 = { a: 1, b: { c: 2 } } as any
     const arr = [2, o1, 7, 4] as any
     const clone = deepcopy(arr)
-    const handler = new Und(arr)
+    const handler = new Unrs(arr)
 
     o1.a = 3
     o1.b.d = 5
@@ -214,7 +214,7 @@ describe('test array', function () {
     const o2 = { a: 1, b: { c: 2 } } as any
     const arr = [1, o2, 3] as any
     const clone = deepcopy(arr)
-    const handler = new Und(arr)
+    const handler = new Unrs(arr)
 
     o2.a = 2
     handler.save()

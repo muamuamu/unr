@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, watch, onUnmounted } from 'vue'
-import Unr from '../src'
+import Unrs from '../src'
 import Tree, { type TreeProps } from './Tree.vue'
 
 const data = reactive<TreeProps>({
@@ -34,7 +34,7 @@ const data = reactive<TreeProps>({
   ]
 })
 
-const handler = new Unr(data)
+const handler = new Unrs(data)
 const canUndo = ref(false)
 const canRedo = ref(false)
 const canReset = ref(false)
@@ -48,17 +48,6 @@ watch(
   },
   { deep: true, immediate: true }
 )
-
-onUnmounted(() => {
-  document.removeEventListener('click', clearSelect)
-})
-
-document.addEventListener('click', clearSelect)
-
-function clearSelect() {
-  selectData.value = undefined
-  selectDataParent.value = undefined
-}
 
 function setStatus() {
   canUndo.value = handler.pointIndex === 0

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue'
-import Unr from '../src'
+import Unrs from '../src'
 
 const textValue = ref('')
 const canUndo = ref(false)
@@ -34,7 +34,14 @@ const data = {
 } as any
 
 const reactData = reactive(data)
-const handler = new Unr(reactData)
+const handler = new Unrs(reactData)
+
+reactData.color = '4566'
+delete reactData.name
+reactData.children.push({
+  color: 'blue',
+  name: 'blue'
+})
 
 watch(
   () => reactData,
@@ -48,19 +55,6 @@ function setStatus() {
   canUndo.value = handler.pointIndex === 0
   canRedo.value = handler.pointIndex === handler.stackLength
   canReset.value = handler.hasChange
-}
-
-
-changeData()
-
-function changeData() {
-  reactData.color = '4566'
-  delete reactData.name
-  reactData.children.push({
-    color: 'blue',
-    name: 'blue'
-  })
-
   textValue.value = JSON.stringify(data, null, "  ")
 }
 

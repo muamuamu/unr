@@ -1,12 +1,12 @@
-# unr
+# unrs
 
 Control the changing state of an object.
 
 ```shell
-npm install unr
+npm install unrs
 ```
 
-- `new Unr(target)`
+- `new Unrs(target)`
   - `path`  `<Object>` An object. 
   
 - `instance.save()`
@@ -33,7 +33,7 @@ npm install unr
 ### Example
 
 ```ts
-import Unr from 'unr'
+import Unrs from 'unrs'
 const data = {
   a: 1,
   children: [
@@ -42,7 +42,7 @@ const data = {
     }
   ]
 }
-const handler = new Unr(data)
+const handler = new Unrs(data)
 data.b = 2
 data.children.push({ a: 3, })
 // data { a: 1, b: 2, children: [{ a: 2, }, { a: 3, }] }
