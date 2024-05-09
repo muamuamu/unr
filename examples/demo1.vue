@@ -47,7 +47,7 @@ watch(
 function setStatus() {
   canUndo.value = handler.pointIndex === 0
   canRedo.value = handler.pointIndex === handler.stackLength
-  canReset.value = handler.hasChange()
+  canReset.value = handler.hasChange
 }
 
 

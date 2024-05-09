@@ -16,8 +16,27 @@ describe('show data', function () {
     handler.save()
     expect(handler).toMatchInlineSnapshot(`
       Und {
-        "pointIndex": 3,
-        "stackLength": 0,
+        "stack": [
+          undefined,
+          {
+            "a": [
+              1,
+              2,
+            ],
+          },
+          {
+            "a": [
+              2,
+              3,
+            ],
+          },
+          {
+            "a": [
+              3,
+              4,
+            ],
+          },
+        ],
       }
     `)
     handler.pointIndex = 2
@@ -25,14 +44,35 @@ describe('show data', function () {
     handler.save()
     expect(handler).toMatchInlineSnapshot(`
       Und {
-        "pointIndex": 3,
-        "stackLength": 0,
+        "stack": [
+          undefined,
+          {
+            "a": [
+              1,
+              2,
+            ],
+          },
+          {
+            "a": [
+              2,
+              3,
+            ],
+          },
+          {
+            "a": [
+              3,
+              4,
+            ],
+          },
+          {
+            "a": [
+              4,
+              5,
+            ],
+          },
+        ],
       }
     `)
-  })
-
-  it('undo', function () {
-    // handler.undo()
   })
 })
 

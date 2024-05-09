@@ -63,7 +63,7 @@ function clearSelect() {
 function setStatus() {
   canUndo.value = handler.pointIndex === 0
   canRedo.value = handler.pointIndex === handler.stackLength
-  canReset.value = handler.hasChange()
+  canReset.value = handler.hasChange
 }
 
 function select(data: TreeProps, parent?: TreeProps) {
@@ -122,8 +122,8 @@ function create() {
   <div>
     <div class="container">
       <div class="editor">
+        <div>selected id: <span v-if="selectData" :style="`color: ${selectData.color}`">{{ selectData.id }}</span></div>
         <div>
-          <span>selected id: <span v-if="selectData" :style="`color: ${selectData.color}`">{{ selectData.id }}</span></span>
           <button @click="undoClick" :disabled="canUndo">←undo</button>
           <button @click="redoClick" :disabled="canRedo">redo→</button>
           <button @click="saveClick" :disabled="!canReset">save</button>

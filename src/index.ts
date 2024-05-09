@@ -1,19 +1,16 @@
 import deepcopy from 'deepcopy'
-import { create, type ObjectDelta } from 'jsondiffpatch'
-import { restore } from './utils'
-
-type DataProps = Record<string, any>
-
-const jsondiffpatchInstance = create({ arrays: { detectMove: false } })
+import { type ObjectDelta } from 'jsondiffpatch'
+import { restore, diff, type TargetObj } from './lib'
 
 class Und {
-  #cacheData = {} as DataProps
-  #current = {} as DataProps
+  #cacheData = {} as TargetObj
+  #current = {} as TargetObj
   #stack = [] as Array<ObjectDelta>
-  pointIndex = 0
-  stackLength = 0
+  stack = [] as Array<ObjectDelta>
+  #pIndex = 0
+  #sLength = 0
 
-  constructor(data: DataProps, options = {}) {
+  constructor(data: TargetObj, options = {}) {
     try {
       this.#current = data
       this.#cacheData = data
@@ -24,31 +21,51 @@ class Und {
     }
   }
 
+  get pointIndex() {
+    return this.#pIndex
+  }
+
+  set pointIndex(value) {
+    console.warn('pointIndex is not writeable')
+  }
+
+  get stackLength() {
+    return this.#sLength
+  }
+
+  set stackLength(value) {
+    console.warn('stackLength is not writeable')
+  }
+
+  get hasChange() {
+    return !!this.diff()
+  }
+
   save() {
     const delta = this.diff()
     if (!delta && this.#stack.length > 0) {
       return
     }
-    this.#stack = [...this.#stack.slice(0, this.pointIndex + 1), delta]
+    this.stack = this.#stack = [...this.#stack.slice(0, this.#pIndex + 1), delta]
     this.setCache()
     this.setPointIndex()
   }
 
   undo() {
-    if (this.pointIndex === 0) {
+    if (this.#pIndex === 0) {
       return
     }
     this.reset()
-    restore(this.#current, this.#stack[this.pointIndex--], true)
+    restore(this.#current, this.#stack[this.#pIndex--], true)
     this.setCache()
   }
 
   redo() {
-    if (this.pointIndex === this.#stack.length - 1) {
+    if (this.#pIndex === this.#stack.length - 1) {
       return
     }
     this.reset()
-    restore(this.#current, this.#stack[++this.pointIndex], false)
+    restore(this.#current, this.#stack[++this.#pIndex], false)
     this.setCache()
   }
 
@@ -60,7 +77,7 @@ class Und {
     restore(this.#current, delta, true)
   }
 
-  patch(source: DataProps) {
+  patch(source: TargetObj) {
     if (!source) {
       return
     }
@@ -71,21 +88,16 @@ class Und {
     restore(this.#current, delta, false)
   }
 
-  hasChange() {
-    return !!this.diff()
-  }
-
-  private diff(left = this.#cacheData, right = this.#current) {
-    return jsondiffpatchInstance.diff(left, right) as ObjectDelta
+  private diff(left = this.#cacheData, right = this.#current): ObjectDelta {
+    return diff(left, right)
   }
 
   private setCache() {
     this.#cacheData = deepcopy(this.#current)
   }
 
-  private setPointIndex(index?: number) {
-    this.stackLength = this.#stack.length - 1
-    this.pointIndex = index ?? this.stackLength
+  private setPointIndex() {
+    this.#pIndex = this.#sLength = this.#stack.length - 1
   }
 }
 

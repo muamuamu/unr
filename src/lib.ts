@@ -1,34 +1,35 @@
-import jsondiffpatch, { diff, ObjectDelta } from 'jsondiffpatch'
+import {
+  create,
+  diff as diffFn,
+  type ObjectDelta,
+  type ModifiedDelta,
+  type AddedDelta,
+  type DeletedDelta,
+} from 'jsondiffpatch'
 
-type TargetObj = Record<string, any>
-
+export type TargetObj = Record<string, any>
 type Restore = (target: TargetObj, handler: ObjectDelta, isUndo: boolean) => void
-
-type RestoreAttrs<T = Delta> = (target: TargetObj, key: string, handler: T, isUndo?: boolean) => void
-
-type AttrHandle = jsondiffpatch.ModifiedDelta | jsondiffpatch.AddedDelta | jsondiffpatch.DeletedDelta
-
-type Delta = ReturnType<typeof diff>
-
+type RestoreAttrs = (target: TargetObj, key: string, handler: AttrHandle, isUndo?: boolean) => void
+type AttrHandle = ModifiedDelta | AddedDelta | DeletedDelta
+type Delta = ReturnType<typeof diffFn>
 type DeepFn = (target: TargetObj, handler: ObjectDelta, isUndo: boolean) => void
-
 type ArrayDeltas = { [key: number]: Delta } & { index: number }
 
 const isArray = Array.isArray
-
 const isObject = (params: any) => Object.prototype.toString.call(params) === '[object Object]'
-
 const isDel = (delta: Delta) => isArray(delta) && delta[1] === 0 && delta[2] === 0
-
 const isAdd = (delta: Delta) => isArray(delta) && delta.length === 1
-
 const isChange = (delta: Delta) => isArray(delta) && delta.length === 2
+const jsondiffpatchInstance = create({ arrays: { detectMove: false } })
+
+export const diff = (left: TargetObj, right: TargetObj): ObjectDelta => {
+  return jsondiffpatchInstance.diff(left, right) as ObjectDelta
+}
 
 export const restore: Restore = (target, handler, isUndo) => {
   if (!handler) {
     return
   }
-
   deepQuery(target, handler, isUndo)
 }
 
@@ -110,7 +111,7 @@ const removeArrayItems = (target: TargetObj, deltas: ArrayDeltas[]) => {
   }
 }
 
-const restoreObjectAttr: RestoreAttrs<AttrHandle> = (target, key, handler, isUndo) => {
+const restoreObjectAttr: RestoreAttrs = (target, key, handler, isUndo) => {
   if (isAdd(handler)) {
     if (isUndo) {
       Reflect.deleteProperty(target, key)

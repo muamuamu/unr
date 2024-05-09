@@ -9,6 +9,11 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "examples/**/*.ts", "examples/**/*.vue"],
+  "include": [
+    "src/**/*.ts", 
+    "test/**/*.ts", 
+    "examples/**/*.ts", 
+    "examples/**/*.vue"
+, "scripts/build.js"  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
