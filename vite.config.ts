@@ -3,7 +3,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
-  root: './examples',
+  root: process.env.NODE_ENV === 'test' ? '' : './examples',
   build: {
     rollupOptions: {
       input: {

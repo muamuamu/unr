@@ -13,7 +13,7 @@
     "src/**/*.ts", 
     "test/**/*.ts", 
     "examples/**/*.ts", 
-    "examples/**/*.vue"
-, "scripts/build.js"  ],
+    "examples/**/*.vue",
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,6 +1,5 @@
-import { expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import Und from '../src'
-import { describe } from 'node:test'
 import deepcopy from 'deepcopy'
 
 describe('show data', function () {
